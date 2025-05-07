@@ -33,12 +33,14 @@ type NavItem = NavCollapsible | NavLink
 interface NavGroup {
   title: string
   items: NavItem[]
+  role: string
 }
 
 interface SidebarData {
   user: User
   teams: Team[]
   navGroups: NavGroup[]
+  
 }
 
 export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink }

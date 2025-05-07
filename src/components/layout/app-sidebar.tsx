@@ -9,8 +9,10 @@ import { NavGroup } from '@/components/layout/nav-group'
 import { NavUser } from '@/components/layout/nav-user'
 import { TeamSwitcher } from '@/components/layout/team-switcher'
 import { sidebarData } from './data/sidebar-data'
+import { useAuthStore } from '@/stores/authStore'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore()
   return (
     <Sidebar collapsible='icon' variant='floating' {...props}>
       <SidebarHeader>
@@ -18,9 +20,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         
-        {sidebarData.navGroups.map((props) => (
-          <NavGroup key={props.title} {...props} />
-        ))}
+        {sidebarData.navGroups.map((props) => {
+            if ((user?.roles || ['user']).includes(props.role) || props.role === 'user') {
+                return <NavGroup key={props.title} {...props} />
+            }
+            return null
+        })}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

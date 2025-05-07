@@ -1,13 +1,7 @@
 import {
-  IconBrowserCheck,
   IconHelp,
-  IconLayoutDashboard,
-  IconNotification,
   IconPackages,
-  IconPalette,
   IconSettings,
-  IconTool,
-  IconUserCog,
   IconTrendingUp,
   IconMessageChatbot,
   IconLinkPlus
@@ -36,6 +30,7 @@ export const sidebarData: SidebarData = {
   navGroups: [
     {
       title: 'Discover',
+      role: 'user',
       items: [
         {
           title: 'Trending Apps',
@@ -46,12 +41,8 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Workspace',
+      role: 'user',
       items: [
-        // {
-        //   title: 'Dashboard',
-        //   url: '/',
-        //   icon: IconLayoutDashboard,
-        // },
         {
           title: 'Apps',
           url: '/apps',
@@ -70,42 +61,18 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: 'Other',
+      title: 'Admin',
+      role: 'admin', 
       items: [
         {
-          title: 'Settings',
+          title: 'Prompts',
           icon: IconSettings,
-          items: [
-            {
-              title: 'Profile',
-              url: '/settings',
-              icon: IconUserCog,
-            },
-            {
-              title: 'Account',
-              url: '/settings/account',
-              icon: IconTool,
-            },
-            {
-              title: 'Appearance',
-              url: '/settings/appearance',
-              icon: IconPalette,
-            },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: IconNotification,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: IconBrowserCheck,
-            },
-          ],
+          url: '/prompts',
+          
         },
         {
-          title: 'Help Center',
-          url: '/help-center',
+          title: 'App config',
+          url: '/app-config',
           icon: IconHelp,
         },
       ],

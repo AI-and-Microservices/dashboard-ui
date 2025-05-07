@@ -8,7 +8,7 @@ interface User {
   firstName?: string;
   lastName?: string;
   name?: string;
-  role?: [string];
+  roles?: [string];
   avatar?: string
 }
 
@@ -44,7 +44,6 @@ export const useAuthStore = create<AuthState>()(
             throw new Error('Có lỗi xảy ra');
           }
           const {data} = await api.post('/user/oauth/google', {credential});
-          console.log(data)
           if (!data?.success) {
             throw new Error(data?.message);
           }
@@ -53,7 +52,7 @@ export const useAuthStore = create<AuthState>()(
             const user: User = { 
               _id: data.data.user._id, 
               email: data.data.user.email, 
-              role: data.data.user.role,
+              roles: data.data.user.roles,
               name: data.data.user.name,
               avatar: data.data.user?.avatar
             };
