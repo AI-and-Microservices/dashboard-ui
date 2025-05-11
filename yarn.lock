@@ -1496,6 +1496,14 @@
     "@tanstack/router-devtools-core" "^1.119.0"
     solid-js "^1.9.5"
 
+"@tanstack/react-router-devtools@^1.120.3":
+  version "1.120.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-router-devtools/-/react-router-devtools-1.120.3.tgz#941987c9e5c66055048dfbabe34f4376f39599b0"
+  integrity sha512-aeEodmbATZ81H1xJuiaWaadSW9iqG9YEvaBgmlS70bxepFNkeXONEXcw38IQMTsPNoEZqbtvqAjl2Pg08cZlxQ==
+  dependencies:
+    "@tanstack/router-devtools-core" "^1.120.3"
+    solid-js "^1.9.5"
+
 "@tanstack/react-router@^1.116.0":
   version "1.119.0"
   resolved "https://registry.yarnpkg.com/@tanstack/react-router/-/react-router-1.119.0.tgz#a4aeec57164eabbfcafe9c2064847c4b732085c3"
@@ -1536,6 +1544,14 @@
   version "1.119.0"
   resolved "https://registry.yarnpkg.com/@tanstack/router-devtools-core/-/router-devtools-core-1.119.0.tgz#d3968510008bebc7d7835687f70cd692f29e5ec6"
   integrity sha512-CH2Hx4J2UOigFtKR0anQfNiWQfidV2S7AZafkeo/S885IxwoFK7xXWzYxNbUhCDJC2tsBJ+XKjgxeBv5wGi62Q==
+  dependencies:
+    clsx "^2.1.1"
+    goober "^2.1.16"
+
+"@tanstack/router-devtools-core@^1.120.3":
+  version "1.120.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/router-devtools-core/-/router-devtools-core-1.120.3.tgz#87dfae54be11229a9196c3c367110da21983785b"
+  integrity sha512-cUY1GFq8qNfIfivhozaG2NOt05Jran1yoZrBajVK0qLO0nIXJ673XeCPjzQkDctN5FU6xfmF6aXgO/xJd0igrA==
   dependencies:
     clsx "^2.1.1"
     goober "^2.1.16"

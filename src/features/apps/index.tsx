@@ -33,13 +33,18 @@ export default function Apps() {
       {/* ===== Content ===== */}
       <Main fixed>
         <Breadcrumbs list={[{title: 'Home', url: '/'}, {title: 'Apps', url: ''}]}/>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
-          <div>
+        <div className='mb-2 flex items-end justify-between space-y-2'>
+          <div className='max-w-2xl'>
             <h1 className='text-2xl font-bold tracking-tight'>
-              App Integrations
+              Your Applications
             </h1>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your apps for the integration!
+            Applications are where you combine one or more Virtual Roles to perform a task or flow.<br/>
+
+            For example:<br />
+            • A contract review tool using Legal and Risk roles<br />
+            • A multi-step onboarding assistant with Task Planner and FAQ roles<br />
+            • A customer support chatbot with Sales, Support and Escalation roles<br />
             </p>
           </div>
           <div>

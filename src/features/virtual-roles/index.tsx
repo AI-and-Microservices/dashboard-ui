@@ -23,10 +23,11 @@ export default function Tasks() {
 
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
-          <div>
+          <div className='max-w-2xl'>
             <h2 className='text-2xl font-bold tracking-tight'>Your virtual roles</h2>
             <p className='text-muted-foreground'>
-              AI will in charge of your virtual roles.
+            Virtual Roles are AI personas with specific instructions, designed to perform defined roles inside your applications. 
+            They help structure logic, automate tasks, or guide user interactions across different use cases.
             </p>
           </div>
           <TasksPrimaryButtons />

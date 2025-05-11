@@ -19,11 +19,13 @@ import {
 } from '@/components/ui/command'
 import { sidebarData } from './layout/data/sidebar-data'
 import { ScrollArea } from './ui/scroll-area'
+import { useAuthStore } from '@/stores/authStore'
 
 export function CommandMenu() {
   const navigate = useNavigate()
   const { setTheme } = useTheme()
   const { open, setOpen } = useSearch()
+  const { user } = useAuthStore()
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
@@ -39,42 +41,45 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type='hover' className='h-72 pr-1'>
           <CommandEmpty>No results found.</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
-            <CommandGroup key={group.title} heading={group.title}>
-              {group.items.map((navItem, i) => {
-                if (navItem.url)
-                  return (
-                    <CommandItem
-                      key={`${navItem.url}-${i}`}
-                      value={navItem.title}
-                      onSelect={() => {
-                        runCommand(() => navigate({ to: navItem.url }))
-                      }}
-                    >
-                      <div className='mr-2 flex h-4 w-4 items-center justify-center'>
-                        <IconArrowRightDashed className='text-muted-foreground/80 size-2' />
-                      </div>
-                      {navItem.title}
-                    </CommandItem>
-                  )
+          {sidebarData.navGroups.map((group) => {
+            if ((user?.roles || ['user']).includes(group.role) || group.role === 'user') {
+                return <CommandGroup key={group.title} heading={group.title}>
+                    {group.items.map((navItem, i) => {
+                        if (navItem.url)
+                        return (
+                            <CommandItem
+                            key={`${navItem.url}-${i}`}
+                            value={navItem.title}
+                            onSelect={() => {
+                                runCommand(() => navigate({ to: navItem.url }))
+                            }}
+                            >
+                            <div className='mr-2 flex h-4 w-4 items-center justify-center'>
+                                <IconArrowRightDashed className='text-muted-foreground/80 size-2' />
+                            </div>
+                            {navItem.title}
+                            </CommandItem>
+                        )
 
-                return navItem.items?.map((subItem, i) => (
-                  <CommandItem
-                    key={`${subItem.url}-${i}`}
-                    value={subItem.title}
-                    onSelect={() => {
-                      runCommand(() => navigate({ to: subItem.url }))
-                    }}
-                  >
-                    <div className='mr-2 flex h-4 w-4 items-center justify-center'>
-                      <IconArrowRightDashed className='text-muted-foreground/80 size-2' />
-                    </div>
-                    {subItem.title}
-                  </CommandItem>
-                ))
-              })}
-            </CommandGroup>
-          ))}
+                        return navItem.items?.map((subItem, i) => (
+                        <CommandItem
+                            key={`${subItem.url}-${i}`}
+                            value={subItem.title}
+                            onSelect={() => {
+                            runCommand(() => navigate({ to: subItem.url }))
+                            }}
+                        >
+                            <div className='mr-2 flex h-4 w-4 items-center justify-center'>
+                            <IconArrowRightDashed className='text-muted-foreground/80 size-2' />
+                            </div>
+                            {subItem.title}
+                        </CommandItem>
+                        ))
+                    })}
+                    </CommandGroup>
+                }
+                return null
+          })}
           <CommandSeparator />
           <CommandGroup heading='Theme'>
             <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
