@@ -16,8 +16,11 @@ import { Link } from '@tanstack/react-router'
 
 export default function Apps() {
   const { data, isLoading, error } = useQueryWithAuth(['user'], '/app/apps');
+  // eslint-disable-next-line no-console
   console.log(error)
+  // eslint-disable-next-line no-console
   console.log(isLoading)
+  // eslint-disable-next-line no-console
   console.log(data)
   return (
     <>

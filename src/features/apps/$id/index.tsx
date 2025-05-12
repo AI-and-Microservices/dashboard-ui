@@ -20,7 +20,6 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { apps } from '../data/apps'
-import { useNavigate } from '@tanstack/react-router'
 import { Breadcrumbs } from '@/components/breadcrumb'
 
 const appText = new Map<string, string>([
@@ -33,7 +32,6 @@ export default function Apps() {
   const [sort, setSort] = useState('ascending')
   const [appType, setAppType] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
-  const navigate = useNavigate()
   const filteredApps = apps
     .sort((a, b) =>
       sort === 'ascending'

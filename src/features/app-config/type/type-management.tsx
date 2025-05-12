@@ -1,10 +1,5 @@
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useMutationWithAuth, useQueryWithAuth } from '@/lib/useQueryWithAuth'
-import { AdminPromptModal } from './CreatePromptModal'
+import { CreateAppTypeModal } from './CreateAppTypeModal'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -13,40 +8,8 @@ import { Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DialogContent } from '@/components/ui/dialog'
 import { toast } from 'sonner'
 
-export default function Prompts() {
 
-  return (
-    <>
-      <Header fixed>
-        <Search />
-        <div className='ml-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      <Main>
-        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Prompts management</h2>
-            <p className='text-muted-foreground'>
-              Manage system, role, template and app prompts.
-            </p>
-          </div>
-          
-          <div className='flex gap-2'></div>
-        </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-            <AdminPromptList />
-        </div>
-        
-      </Main>
-
-    </>
-  )
-}
-
-export function AdminPromptList() {
+export default function TypeList() {
     const [isOpen, setIsOpen] = useState(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, refetch }: { data: any, refetch: () => void } = useQueryWithAuth(["prompts"], "/prompt/admin/prompts")
@@ -72,7 +35,7 @@ export function AdminPromptList() {
               <TableHead>Key</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -97,22 +60,22 @@ export function AdminPromptList() {
           </TableBody>
         </Table>
 
-        <DeletePromptModal open={!!confirmDeleteId} onSuccess={() => { setConfirmDeleteId(null); refetch() }} confirmDeleteId={confirmDeleteId} onClose={() => setConfirmDeleteId(null)} />
+        <DeleteTypeModal open={!!confirmDeleteId} onSuccess={() => { setConfirmDeleteId(null); refetch() }} confirmDeleteId={confirmDeleteId} onClose={() => setConfirmDeleteId(null)} />
 
-        <AdminPromptModal open={isOpen} onClose={() => setIsOpen(false)} defaultValues={editingPrompt} refetch={refetch} />
+        <CreateAppTypeModal open={isOpen} onClose={() => setIsOpen(false)} defaultValues={editingPrompt} refetch={refetch} />
       </div>
     )
-  }
-  
+}
 
-  const DeletePromptModal = ({open, onSuccess, confirmDeleteId, onClose}: {open: boolean, onSuccess: () => void, confirmDeleteId: string | null, onClose: () => void}) => {
-    const deletePrompt = useMutationWithAuth("delete", `/prompt/admin/prompts/${confirmDeleteId}`)
+
+const DeleteTypeModal = ({open, onSuccess, confirmDeleteId, onClose}: {open: boolean, onSuccess: () => void, confirmDeleteId: string | null, onClose: () => void}) => {
+    const deleteType = useMutationWithAuth("delete", `/prompt/admin/prompts/${confirmDeleteId}`)
 
     const onDelete = async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const res: any = await deletePrompt.mutateAsync(); 
+        const res: any = await deleteType.mutateAsync(); 
         if (res.success) {
-            toast.success("Prompt deleted successfully")
+            toast.success("Type deleted successfully")
             onSuccess()
         }
     }
@@ -133,4 +96,4 @@ export function AdminPromptList() {
             </DialogContent>
         </Dialog>
     )
-  }
+}

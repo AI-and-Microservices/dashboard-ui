@@ -20,7 +20,7 @@ const promptSchema = z.object({
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function AdminPromptModal({ open, onClose, defaultValues, refetch }: { open: boolean; onClose: () => void; defaultValues?: any; refetch: () => void }) {
+export function CreateAppTypeModal({ open, onClose, defaultValues, refetch }: { open: boolean; onClose: () => void; defaultValues?: any; refetch: () => void }) {
     const isEdit = Boolean(defaultValues?._id)
     const {
     register,

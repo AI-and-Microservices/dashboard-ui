@@ -30,8 +30,8 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
         const {getNewToken} = useAuthStore.getState()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const onError = async (error: any) => {
-            console.log(error)
             return Promise.reject(error);
         }
         if (error.response?.status === 401) {

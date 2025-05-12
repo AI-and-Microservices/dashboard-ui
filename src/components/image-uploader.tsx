@@ -9,13 +9,11 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/stores/modalStore"
-import { useMediaStore } from "@/stores/mediaStore"
 
 const formSchema = z.object({
     file: z
@@ -27,10 +25,8 @@ const formSchema = z.object({
 
 export const ImageUploader = () => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>("");
-    const [file, setFile] = useState<File | null>(null)
     const [isUploading, setIsUploading] = useState(false)
     const { toggleMediaModal } = useModalStore()
-    const {trigger} = useMediaStore()
     const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -48,6 +44,8 @@ export const ImageUploader = () => {
         form.setValue("file", acceptedFiles[0]);
         form.clearErrors("file");
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
         setPreview(null);
         form.resetField("file");
       }
@@ -64,20 +62,25 @@ export const ImageUploader = () => {
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
+        // eslint-disable-next-line no-console
         console.log(values)
     }
 
     const handleUpload = () => {
-        // Giả lập upload thành công và lấy link preview để demo
-        alert("Image uploaded (mock)")
+        upload(form.getValues())
     }
 
     const handleUploadAndUse = () => {
+        // eslint-disable-next-line no-console
         console.log('handleUploadAndUse')
+        upload(form.getValues())
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const upload = (values: any) => {
+        // eslint-disable-next-line no-console
         console.log(values)
+        setIsUploading(true)
     }
 
   return (

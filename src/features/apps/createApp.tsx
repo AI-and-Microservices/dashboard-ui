@@ -25,7 +25,6 @@ import {
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -82,8 +81,10 @@ const CreateApp = () => {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createApp: any = useMutationWithAuth('post', '/app/apps', {
       onSuccess: () => {
+        // eslint-disable-next-line no-console
         console.log('create app success')
       },
     });

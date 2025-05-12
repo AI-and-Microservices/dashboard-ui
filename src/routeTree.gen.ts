@@ -22,6 +22,7 @@ import { Route as errors403Import } from './routes/(errors)/403'
 import { Route as errors401Import } from './routes/(errors)/401'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AdminAppConfigRouteImport } from './routes/_admin/app-config/route'
 import { Route as AuthenticatedVirtualRolesIndexImport } from './routes/_authenticated/virtual-roles/index'
 import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedIntegrationsIndexImport } from './routes/_authenticated/integrations/index'
@@ -35,6 +36,7 @@ import { Route as AuthenticatedSettingsDisplayImport } from './routes/_authentic
 import { Route as AuthenticatedSettingsAppearanceImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedAppsCreateAppImport } from './routes/_authenticated/apps/create-app'
+import { Route as AdminAppConfigTypeImport } from './routes/_admin/app-config/type'
 import { Route as AuthenticatedAppsIdIndexImport } from './routes/_authenticated/apps/$id/index'
 
 // Create/Update Routes
@@ -104,6 +106,12 @@ const AuthenticatedSettingsRouteRoute = AuthenticatedSettingsRouteImport.update(
   } as any,
 )
 
+const AdminAppConfigRouteRoute = AdminAppConfigRouteImport.update({
+  id: '/app-config',
+  path: '/app-config',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+
 const AuthenticatedVirtualRolesIndexRoute =
   AuthenticatedVirtualRolesIndexImport.update({
     id: '/virtual-roles/',
@@ -146,9 +154,9 @@ const AdminPromptsIndexRoute = AdminPromptsIndexImport.update({
 } as any)
 
 const AdminAppConfigIndexRoute = AdminAppConfigIndexImport.update({
-  id: '/app-config/',
-  path: '/app-config/',
-  getParentRoute: () => AdminRouteRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminAppConfigRouteRoute,
 } as any)
 
 const exploringDiscoverIndexRoute = exploringDiscoverIndexImport.update({
@@ -193,6 +201,12 @@ const AuthenticatedAppsCreateAppRoute = AuthenticatedAppsCreateAppImport.update(
   } as any,
 )
 
+const AdminAppConfigTypeRoute = AdminAppConfigTypeImport.update({
+  id: '/type',
+  path: '/type',
+  getParentRoute: () => AdminAppConfigRouteRoute,
+} as any)
+
 const AuthenticatedAppsIdIndexRoute = AuthenticatedAppsIdIndexImport.update({
   id: '/apps/$id/',
   path: '/apps/$id/',
@@ -223,6 +237,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/_admin/app-config': {
+      id: '/_admin/app-config'
+      path: '/app-config'
+      fullPath: '/app-config'
+      preLoaderRoute: typeof AdminAppConfigRouteImport
+      parentRoute: typeof AdminRouteImport
     }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
@@ -280,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_admin/app-config/type': {
+      id: '/_admin/app-config/type'
+      path: '/type'
+      fullPath: '/app-config/type'
+      preLoaderRoute: typeof AdminAppConfigTypeImport
+      parentRoute: typeof AdminAppConfigRouteImport
+    }
     '/_authenticated/apps/create-app': {
       id: '/_authenticated/apps/create-app'
       path: '/apps/create-app'
@@ -324,10 +352,10 @@ declare module '@tanstack/react-router' {
     }
     '/_admin/app-config/': {
       id: '/_admin/app-config/'
-      path: '/app-config'
-      fullPath: '/app-config'
+      path: '/'
+      fullPath: '/app-config/'
       preLoaderRoute: typeof AdminAppConfigIndexImport
-      parentRoute: typeof AdminRouteImport
+      parentRoute: typeof AdminAppConfigRouteImport
     }
     '/_admin/prompts/': {
       id: '/_admin/prompts/'
@@ -395,13 +423,26 @@ const exploringRouteRouteWithChildren = exploringRouteRoute._addFileChildren(
   exploringRouteRouteChildren,
 )
 
-interface AdminRouteRouteChildren {
+interface AdminAppConfigRouteRouteChildren {
+  AdminAppConfigTypeRoute: typeof AdminAppConfigTypeRoute
   AdminAppConfigIndexRoute: typeof AdminAppConfigIndexRoute
+}
+
+const AdminAppConfigRouteRouteChildren: AdminAppConfigRouteRouteChildren = {
+  AdminAppConfigTypeRoute: AdminAppConfigTypeRoute,
+  AdminAppConfigIndexRoute: AdminAppConfigIndexRoute,
+}
+
+const AdminAppConfigRouteRouteWithChildren =
+  AdminAppConfigRouteRoute._addFileChildren(AdminAppConfigRouteRouteChildren)
+
+interface AdminRouteRouteChildren {
+  AdminAppConfigRouteRoute: typeof AdminAppConfigRouteRouteWithChildren
   AdminPromptsIndexRoute: typeof AdminPromptsIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
-  AdminAppConfigIndexRoute: AdminAppConfigIndexRoute,
+  AdminAppConfigRouteRoute: AdminAppConfigRouteRouteWithChildren,
   AdminPromptsIndexRoute: AdminPromptsIndexRoute,
 }
 
@@ -460,6 +501,7 @@ const AuthenticatedRouteRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
+  '/app-config': typeof AdminAppConfigRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/401': typeof errors401Route
@@ -467,13 +509,14 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/app-config/type': typeof AdminAppConfigTypeRoute
   '/apps/create-app': typeof AuthenticatedAppsCreateAppRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/discover': typeof exploringDiscoverIndexRoute
-  '/app-config': typeof AdminAppConfigIndexRoute
+  '/app-config/': typeof AdminAppConfigIndexRoute
   '/prompts': typeof AdminPromptsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -492,6 +535,7 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/app-config/type': typeof AdminAppConfigTypeRoute
   '/apps/create-app': typeof AuthenticatedAppsCreateAppRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -513,6 +557,7 @@ export interface FileRoutesById {
   '/(exploring)': typeof exploringRouteRouteWithChildren
   '/_admin': typeof AdminRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_admin/app-config': typeof AdminAppConfigRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(errors)/401': typeof errors401Route
@@ -521,6 +566,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_admin/app-config/type': typeof AdminAppConfigTypeRoute
   '/_authenticated/apps/create-app': typeof AuthenticatedAppsCreateAppRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -542,6 +588,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/app-config'
     | '/settings'
     | '/sign-in'
     | '/401'
@@ -549,13 +596,14 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/app-config/type'
     | '/apps/create-app'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
     | '/discover'
-    | '/app-config'
+    | '/app-config/'
     | '/prompts'
     | '/apps'
     | '/help-center'
@@ -573,6 +621,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/app-config/type'
     | '/apps/create-app'
     | '/settings/account'
     | '/settings/appearance'
@@ -592,6 +641,7 @@ export interface FileRouteTypes {
     | '/(exploring)'
     | '/_admin'
     | '/_authenticated'
+    | '/_admin/app-config'
     | '/_authenticated/settings'
     | '/(auth)/sign-in'
     | '/(errors)/401'
@@ -600,6 +650,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
+    | '/_admin/app-config/type'
     | '/_authenticated/apps/create-app'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -671,7 +722,7 @@ export const routeTree = rootRoute
     "/_admin": {
       "filePath": "_admin/route.tsx",
       "children": [
-        "/_admin/app-config/",
+        "/_admin/app-config",
         "/_admin/prompts/"
       ]
     },
@@ -686,6 +737,14 @@ export const routeTree = rootRoute
         "/_authenticated/integrations/",
         "/_authenticated/virtual-roles/",
         "/_authenticated/apps/$id/"
+      ]
+    },
+    "/_admin/app-config": {
+      "filePath": "_admin/app-config/route.tsx",
+      "parent": "/_admin",
+      "children": [
+        "/_admin/app-config/type",
+        "/_admin/app-config/"
       ]
     },
     "/_authenticated/settings": {
@@ -721,6 +780,10 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_admin/app-config/type": {
+      "filePath": "_admin/app-config/type.tsx",
+      "parent": "/_admin/app-config"
+    },
     "/_authenticated/apps/create-app": {
       "filePath": "_authenticated/apps/create-app.tsx",
       "parent": "/_authenticated"
@@ -747,7 +810,7 @@ export const routeTree = rootRoute
     },
     "/_admin/app-config/": {
       "filePath": "_admin/app-config/index.tsx",
-      "parent": "/_admin"
+      "parent": "/_admin/app-config"
     },
     "/_admin/prompts/": {
       "filePath": "_admin/prompts/index.tsx",

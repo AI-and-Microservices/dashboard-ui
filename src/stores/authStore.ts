@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import api from '@/lib/api'
 
 interface User {
   _id: string;
@@ -24,6 +23,7 @@ export interface AuthState {
   googleVerify: (credential: string) => Promise<boolean>;
   clearError: () => void;
   setToken: (token: string) => void;
+  // eslint-disable-next-line
   getNewToken: (onError: Function) => void;
 }
 
@@ -43,7 +43,14 @@ export const useAuthStore = create<AuthState>()(
           if (!credential) {
             throw new Error('Có lỗi xảy ra');
           }
-          const {data} = await api.post('/user/oauth/google', {credential});
+          const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/oauth/google`, {
+            method: 'POST',
+            body: JSON.stringify({credential}),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          const data = await res.json();
           if (!data?.success) {
             throw new Error(data?.message);
           }
@@ -92,15 +99,31 @@ export const useAuthStore = create<AuthState>()(
       },
       getNewToken: async (onError) => {
         try {
-          const {refreshToken} = get()
-          const {data} = await api.post('/user/refresh-token', {refreshToken});
-          
-          set({ 
-            isAuthenticated: true, 
-            isLoading: false, 
-            token: data.data.accessToken, 
-            refreshToken: data.data.refreshToken,
+          const {refreshToken, logout} = get()  
+          if (!refreshToken) {
+            logout()
+            return
+          }
+          const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/refresh-token`, {
+            method: 'POST',
+            body: JSON.stringify({refreshToken}),
+            headers: {
+              'Content-Type': 'application/json'
+            }
           });
+          const data = await res.json();
+          if (!data?.success) {
+            logout()
+          }
+          else {
+            set({ 
+              isAuthenticated: true, 
+              isLoading: false, 
+              token: data.data.accessToken, 
+              refreshToken: data.data.refreshToken,
+            });
+          }
+          
         }
         catch(error) {
           if (typeof onError === 'function') {

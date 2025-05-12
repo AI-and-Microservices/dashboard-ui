@@ -20,8 +20,7 @@ const refreshToken = async () => {
     await useAuthStore.getState().getNewToken(onRefreshTokenError)
 }
 
-const onRefreshTokenError = (error: AxiosError) => {
-    console.log(error)
+const onRefreshTokenError = () => {
     // logout and show signin screen
     useAuthStore.getState().logout()
     const redirect = `${router.history.location.href}`

@@ -2,7 +2,6 @@ import { HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 import { GoogleLogin } from '@react-oauth/google'
 import { useAuthStore } from '@/stores/authStore'
-import { useNavigate } from '@tanstack/react-router'
 
 type UserAuthFormProps = HTMLAttributes<HTMLFormElement>
 
@@ -36,6 +35,7 @@ export function UserAuthForm({ className }: UserAuthFormProps) {
               }
           }}
           onError={() => {
+              // eslint-disable-next-line no-console
               console.log('Login Failed');
           }}
         />
