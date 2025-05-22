@@ -32,7 +32,10 @@ import {
   } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useModalStore } from "@/stores/modalStore";
-
+import Chat from '@/components/chat';
+import { useConversationStore } from '@/stores/conversationStore';
+import { useEffect } from 'react';
+import { useAuthStore } from '@/stores/authStore';
 const appSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string(),
@@ -64,35 +67,40 @@ const HoverInfo = (props: {text: string}) => {
     )
 }
 
+const avatar = '/images/assistant-avatar.png'
+const conversationKey = 'appCreator'
+const promptKey = 'APP_CREATOR'
+
 const CreateApp = () => {
-  const {toggleMediaModal} = useModalStore()
-  const form = useForm<AppFormValues>({
-    resolver: zodResolver(appSchema),
-    defaultValues: {
-        name: '',
-        description: '',
-        type: 'chatbot',
-        isActive: true,
-        isPublic: false,
-        virtualRoles: [],
-        prompt: '',
-        cover: '',
-        logo: ''
-    },
-  });
+    const {user} = useAuthStore()
+    const {setConversationByKey, getConversationByKey} = useConversationStore()
+    const conversation = getConversationByKey(conversationKey)    
+    const {mutate: createConversation}: any = useMutationWithAuth('post', 'conversation/conversations', {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onSuccess: (data: any) => {
+            // eslint-disable-next-line no-console
+            console.log('conversation created', data)
+            setConversationByKey(conversationKey, data?.data)
+        }
+    })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const createApp: any = useMutationWithAuth('post', '/app/apps', {
-      onSuccess: () => {
-        // eslint-disable-next-line no-console
-        console.log('create app success')
-      },
-    });
-
-  const onSubmit = (data: AppFormValues) => {
-    createApp.mutate(data)
-  }
-
+    useEffect(() => {
+        if (!conversation) {
+            if (!user?._id) {
+                return
+            }
+            // create new conversation
+            const newConversation = {
+                mode: 'system_chatbot',
+                promptKey: promptKey,
+                userId: user._id,
+                isActive: true
+            }
+            // create new conversation
+            createConversation(newConversation)
+        }
+        
+    }, [conversation])
   return (
     <>
         <Header>
@@ -112,15 +120,53 @@ const CreateApp = () => {
                 <p className='text-muted-foreground'></p>
             </div>
 
+        </div>
+       
+        <Separator className='shadow-sm' />
+        {/* <CreateAppForm /> */}
+        {conversation && <Chat conversation={conversation} conversationKey={conversationKey} promptKey={promptKey} avatar={avatar} name={'Assistant'} description={'Assistant is a chatbot that can help you create your app.'} />}
+      </Main>
+    </>
+    
+  );
+};
+
+const CreateAppForm = () => {
+    const {toggleMediaModal} = useModalStore()
+    const form = useForm<AppFormValues>({
+        resolver: zodResolver(appSchema),
+        defaultValues: {
+            name: '',
+            description: '',
+            type: 'chatbot',
+            isActive: true,
+            isPublic: false,
+            virtualRoles: [],
+            prompt: '',
+            cover: '',
+            logo: ''
+        },
+      });
+    
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const createApp: any = useMutationWithAuth('post', '/app/apps', {
+          onSuccess: () => {
+            // eslint-disable-next-line no-console
+            console.log('create app success')
+          },
+        });
+    
+      const onSubmit = (data: AppFormValues) => {
+        createApp.mutate(data)
+      }
+
+    return (
+        <div className='faded-bottom no-scrollbar gap-4 overflow-auto pt-4 pb-16'>
             <div className='flex justify-end'>
                 <Button className='space-x-1' onClick={form.handleSubmit(onSubmit)}>
                     <span>Create App</span>
                 </Button>
             </div>
-        </div>
-       
-        <Separator className='shadow-sm' />
-        <div className='faded-bottom no-scrollbar gap-4 overflow-auto pt-4 pb-16'>
             <Form {...form}>
                 <form>
                     <div className="pt-4 space-y-8 grid gap-8 md:grid-cols-2">
@@ -254,10 +300,7 @@ const CreateApp = () => {
 
             </Form>
         </div>
-      </Main>
-    </>
-    
-  );
-};
+    )
+}
 
 export default CreateApp;

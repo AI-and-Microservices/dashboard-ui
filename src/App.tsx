@@ -15,16 +15,11 @@ import './index.css'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
 import MediaLibrary from '@/components/media-library'
+import { useSocketStore } from '@/stores/socketStore'
+import { useEffect, useState } from 'react';
 
 const refreshToken = async () => {
-    await useAuthStore.getState().getNewToken(onRefreshTokenError)
-}
-
-const onRefreshTokenError = () => {
-    // logout and show signin screen
-    useAuthStore.getState().logout()
-    const redirect = `${router.history.location.href}`
-    router.navigate({ to: '/sign-in', search: { redirect } })
+    await useAuthStore.getState().getNewToken()
 }
 
 const queryClient = new QueryClient({
@@ -110,6 +105,20 @@ declare module '@tanstack/react-router' {
 
 const App = () => {
     const auth = useAuthStore()
+    const {connectSocket, disconnectSocket} = useSocketStore()
+    const [isConnecting, setIsConnecting] = useState(false)
+    useEffect(() => {
+        if (auth.isAuthenticated && auth.token && !isConnecting) {
+            setIsConnecting(true)
+            connectSocket(auth.token)
+        }
+        return () => {
+            setIsConnecting(false)
+            disconnectSocket()
+        }
+
+    }, [auth.isAuthenticated, auth.token])
+
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <QueryClientProvider client={queryClient}>

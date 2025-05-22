@@ -23,8 +23,7 @@ export interface AuthState {
   googleVerify: (credential: string) => Promise<boolean>;
   clearError: () => void;
   setToken: (token: string) => void;
-  // eslint-disable-next-line
-  getNewToken: (onError: Function) => void;
+  getNewToken: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -51,6 +50,8 @@ export const useAuthStore = create<AuthState>()(
             }
           });
           const data = await res.json();
+          // eslint-disable-next-line no-console
+          console.log(data)
           if (!data?.success) {
             throw new Error(data?.message);
           }
@@ -97,7 +98,7 @@ export const useAuthStore = create<AuthState>()(
       setToken: (token: string) => {
         set({token: token });
       },
-      getNewToken: async (onError) => {
+      getNewToken: async () => {
         try {
           const {refreshToken, logout} = get()  
           if (!refreshToken) {
@@ -126,9 +127,7 @@ export const useAuthStore = create<AuthState>()(
           
         }
         catch(error) {
-          if (typeof onError === 'function') {
-            onError(error)
-          }
+            get().logout()
         }
       }
     }),

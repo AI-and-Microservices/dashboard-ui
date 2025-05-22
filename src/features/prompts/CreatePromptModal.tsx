@@ -69,7 +69,7 @@ export function AdminPromptModal({ open, onClose, defaultValues, refetch }: { op
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg w-full">
+      <DialogContent className="max-w-3xl w-full sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Prompt" : "Create New Prompt"}</DialogTitle>
         </DialogHeader>
@@ -79,7 +79,7 @@ export function AdminPromptModal({ open, onClose, defaultValues, refetch }: { op
 
           <Input placeholder="Key (optional, only for system prompts)" {...register("key")} />
 
-          <Textarea placeholder="Prompt content" rows={4} {...register("content")} />
+          <Textarea placeholder="Prompt content" rows={4} {...register("content")} className="max-h-[50vh]" />
           {errors.content && <p className="text-sm text-red-500">{errors.content.message}</p>}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
